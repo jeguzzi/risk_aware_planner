@@ -1,7 +1,7 @@
 <launch>
 
 <group ns="sim_p3at">
-  <node pkg="rviz_paths" name="rviz_paths_server" type="rviz_path_server_node.py">
+  <node pkg="traversability_rviz_paths" name="rviz_paths_server" type="rviz_path_server_node.py">
     <param name="offset" value="0.1"/>
     <param name="width" value="0.1"/>
   </node>
@@ -28,6 +28,6 @@
   <!-- <include file="$(find gazebo_traversability_plugin)/launch/pioneer3at.launch"/> -->
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="map2odom" args="0 0 0 0 0 0 map odom"/>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 0 0 0 map gz"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 0 0 -1.5708 map gz"/>
 
 </launch>
