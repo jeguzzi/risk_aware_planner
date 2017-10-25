@@ -17,8 +17,8 @@
   </node>
 
   <node pkg="risk_aware_planner" name="planner" type="planner.py"  output="screen">
-    <param name="elevation_path" value="$(find risk_aware_planner)/data/elevation.png"/>
-    <param name="graph_path" value="$(find risk_aware_planner)/data/graph.graphml"/>
+    <param name="elevation_path" value="$(find risk_aware_planner)/data/eth_asl_513.png"/>
+    <param name="graph_path" value="$(find risk_aware_planner)/data/t_graph_cnn_eth_asl_513.graphml"/>
     <param name="tol" value="0.15"/>
     <param name="mtol" value="1.25"/>
     <param name="frame_id" value="map"/>

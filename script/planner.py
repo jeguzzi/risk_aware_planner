@@ -196,6 +196,7 @@ def plan(graph, s, t, tol=0.1, mtol=1.1):
 
 
 def reach_image(rs, elevation):
+    rospy.loginfo('rs %s, elevation %s', rs.shape, elevation.shape)
     rs = scipy.misc.imresize(rs, elevation.shape)
     rs = rs
     img = np.stack([elevation, elevation, elevation, rs], axis=2)
@@ -233,7 +234,10 @@ class Planner(object):
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer)
 
         path = rospy.get_param('~elevation_path')
-        self.elevation = (plt.imread(path) * 255).astype(int)
+        img = (plt.imread(path) * 255).astype(int)
+        if len(img.shape) > 2:
+            img = img[..., 0]
+        self.elevation = img
         graph_path = rospy.get_param("~graph_path")
         max_traversability = rospy.get_param("~max_traversability", 0.99)
         G = nx.read_graphml(graph_path)
