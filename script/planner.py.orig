@@ -13,7 +13,11 @@ from dynamic_reconfigure.server import Server
 from geometry_msgs.msg import PoseStamped
 from matplotlib import pyplot as plt
 from path_follower import array_from_msg, pose_in_frame
+<<<<<<< HEAD
+from traversability_rviz_paths.msg import Path, Paths
+=======
 from risk_aware_planner.cfg import PlannerConfig
+>>>>>>> 3005746b9623ca6a966e6d86ec4fa9af29ef6d0d
 from sensor_msgs.msg import Image
 from shapely.geometry import LineString
 from std_msgs.msg import ColorRGBA

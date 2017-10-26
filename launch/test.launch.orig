@@ -1,0 +1,32 @@
+<launch>
+
+<group ns="sim_p3at">
+  <node pkg="traversability_rviz_paths" name="rviz_paths_server" type="rviz_path_server_node.py">
+    <param name="offset" value="0.1"/>
+    <param name="width" value="0.1"/>
+  </node>
+  <!-- <node pkg="rosbag" type="play" name='loader' args="$(find rviz_paths)/bag/test.bag -k" /> -->
+  <node pkg="risk_aware_planner" name="controller" type="path_follower.py"  output="screen">
+    <param name="max_speed" value="0.15"/>
+    <param name="max_angular_speed" value="0.5"/>
+    <param name="k" value="2"/>
+    <param name="min_distance" value="0.1"/>
+    <param name="delta" value="0.25"/>
+    <param name="rate" value="20"/>
+    <param name="tau" value="0.5"/>
+  </node>
+
+  <node pkg="risk_aware_planner" name="planner" type="planner.py"  output="screen">
+    <param name="elevation_path" value="$(find risk_aware_planner)/data/eth_asl_513.png"/>
+    <param name="graph_path" value="$(find risk_aware_planner)/data/t_graph_cnn_eth_asl_513.graphml"/>
+    <param name="tol" value="0.0"/>
+    <param name="mtol" value="1.05"/>
+    <param name="frame_id" value="map"/>
+  </node>
+
+</group>
+  <!-- <include file="$(find gazebo_traversability_plugin)/launch/pioneer3at.launch"/> -->
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="gz2odom" args="0 0 0 0 0 0 gz odom"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 -1.5708 0 0 map gz"/>
+</launch>
