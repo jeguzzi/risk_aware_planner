@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
 
-import rospy
-
 import numpy as np
-from shapely.geometry import LineString, Point
-import tf2_ros
+
+import rospy
 import tf2_geometry_msgs
-from geometry_msgs.msg import (PoseStamped, Twist, Vector3)
+import tf2_ros
+from dynamic_reconfigure.server import Server
+from geometry_msgs.msg import PoseStamped, Twist, Vector3
 from nav_msgs.msg import Path
+from risk_aware_planner.cfg import ControllerConfig
+from shapely.geometry import LineString, Point
 from tf.transformations import euler_from_quaternion
 
 
@@ -119,7 +121,19 @@ class PathFollower(object):
         rospy.Subscriber("selected_path", Path, self.has_updated_path)
         rospy.Subscriber("pose", PoseStamped, self.has_updated_pose)
         rospy.Subscriber("target", PoseStamped, self.has_updated_target)
+
+        self.srv = Server(ControllerConfig, self.callback)
+
         rospy.spin()
+
+    def callback(self, config, level):
+        self.delta = config['delta']
+        self.min_distance = config['min_distance']
+        self.tau = config['tau']
+        self.target_speed = config['max_speed']
+        self.target_angular_speed = config['max_angular_speed']
+        self.k = config['k']
+        return config
 
     def has_updated_target(self, msg):
         self.stop()

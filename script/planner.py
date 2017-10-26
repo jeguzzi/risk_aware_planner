@@ -9,13 +9,15 @@ import networkx as nx
 import rospy
 import scipy.misc
 import tf2_ros
+from dynamic_reconfigure.server import Server
 from geometry_msgs.msg import PoseStamped
 from matplotlib import pyplot as plt
 from path_follower import array_from_msg, pose_in_frame
-from traversability_rviz_paths.msg import Path, Paths
+from risk_aware_planner.cfg import PlannerConfig
 from sensor_msgs.msg import Image
 from shapely.geometry import LineString
 from std_msgs.msg import ColorRGBA
+from traversability_rviz_paths.msg import Path, Paths
 
 
 def node(ix, iy, cols):
@@ -160,7 +162,10 @@ def _f(g, s, t, k0, k1, r, tol=0.1, key='distance'):
 
 
 def approx_pareto_convex_hul(g, s, t, tol=0.1, mtol=1.1):
-    if not nx.has_path(g, s, t):
+    try:
+        if not nx.has_path(g, s, t):
+            return {}
+    except nx.NodeNotFound:
         return {}
     # print('has path')
     r = {}
@@ -250,7 +255,15 @@ class Planner(object):
         self.reach_pub = rospy.Publisher("reach", Image, queue_size=1, latch=True)
         rospy.Subscriber("target", PoseStamped, self.has_updated_target)
         rospy.Subscriber("pose", PoseStamped, self.has_updated_pose)
+
+        self.srv = Server(PlannerConfig, self.callback)
+
         rospy.spin()
+
+    def callback(self, config, level):
+        self.tol = config['tol']
+        self.mtol = config['mtol']
+        return config
 
     def has_updated_pose(self, msg):
         self.pose = pose_in_frame(self.tf_buffer, msg, self.frame_id)
