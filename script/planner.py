@@ -11,7 +11,7 @@ import scipy.misc
 from geometry_msgs.msg import PoseStamped
 from matplotlib import pyplot as plt
 from path_follower import array_from_msg, pose_in_frame
-from rviz_paths.msg import Path, Paths
+from traversability_rviz_paths.msg import Path, Paths
 from sensor_msgs.msg import Image
 from shapely.geometry import LineString
 from std_msgs.msg import ColorRGBA

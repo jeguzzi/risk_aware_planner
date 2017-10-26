@@ -27,7 +27,7 @@
 </group>
   <!-- <include file="$(find gazebo_traversability_plugin)/launch/pioneer3at.launch"/> -->
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map2odom" args="0 0 0 0 0 0 map odom"/>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 0 0 -1.5708 map gz"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="gz2odom" args="0 0 0 0 0 0 gz odom"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 -1.5708 0 0 map gz"/>
 
 </launch>
