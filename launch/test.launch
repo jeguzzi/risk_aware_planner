@@ -19,15 +19,16 @@
   <node pkg="risk_aware_planner" name="planner" type="planner.py"  output="screen">
     <param name="elevation_path" value="$(find risk_aware_planner)/data/eth_asl_513.png"/>
     <param name="graph_path" value="$(find risk_aware_planner)/data/t_graph_cnn_eth_asl_513.graphml"/>
-    <param name="tol" value="0.15"/>
-    <param name="mtol" value="1.25"/>
+    <param name="tol" value="0.0"/>
+    <param name="mtol" value="1.05"/>
     <param name="frame_id" value="map"/>
   </node>
 
 </group>
   <!-- <include file="$(find gazebo_traversability_plugin)/launch/pioneer3at.launch"/> -->
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map2odom" args="0 0 0 0 0 0 map odom"/>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 0 0 -1.5708 map gz"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="gz2odom" args="0 0 0 0 0 0 gz odom"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2gz" args="0 0 0 -1.5708 0 0 map gz"/>
+
 
 </launch>
