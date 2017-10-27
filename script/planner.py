@@ -43,10 +43,11 @@ def clamp(v, _max, top):
     return v if v < _max else top
 
 
-def nccr_edge(e, max_traversability=0.99):
+def nccr_edge(e, max_traversability=0.99, training_stride=0.1):
     x, y, data = e
     return (int(x), int(y), {
-        'survival': max(0, -np.log(clamp(data['probability'], max_traversability, 1.0))),
+        'survival': (data['distance'] / training_stride *
+                     max(0, -np.log(clamp(data['probability'], max_traversability, 1.0)))),
         'distance': data['distance'],
         'p': data['probability']})
 
@@ -59,9 +60,11 @@ def nccr_pos(data, m=3):
     return [round(float(t), m) for t in data['rviz_pos'].split(',')]
 
 
-def nccr_graph(G, min_traversability=0, max_traversability=0.99):
+def nccr_graph(G, min_traversability=0, max_traversability=0.99, training_stride=0.1):
     g = nx.DiGraph()
-    g.add_edges_from([nccr_edge(e, max_traversability=max_traversability)
+    g.add_nodes_from([int(x) for x in G.nodes()])
+    g.add_edges_from([nccr_edge(e, max_traversability=max_traversability,
+                                training_stride=training_stride)
                       for e in G.edges(data=True)
                       if e[2]['probability'] > min_traversability])
     for node, data in g.nodes(data=True):
@@ -121,7 +124,7 @@ def comb_path(G, k, s, t, key='distance'):
         ps = list(itertools.islice(
             nx.all_shortest_paths(G, s, t, weight='weight'), 50))
     except Exception as e:
-        rospy.error('No path', k, s, t)
+        rospy.logerr('No path', k, s, t)
 
     attrss = [[G[x][y] for x, y in n_grams(p, 2)] for p in ps]
     if len(ps) > 1:
